@@ -2,11 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:golink/components/custom_button.dart';
 import 'package:golink/components/custom_text_field.dart';
+import 'package:golink/core/dio.dart';
 import 'package:golink/screens/sign_in_screen.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
   static String routeName = '/register';
+
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  bool isLoading = false;
+  String? error;
+
+  send() async {
+    isLoading = true;
+
+    try {
+      await DioClient().dio.post('/');
+      if (!mounted) return;
+    } catch (e) {
+      error = e.toString();
+    } finally {
+      isLoading = false;
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +79,7 @@ class RegisterScreen extends StatelessWidget {
           CustomButtonPrimary(
               label: "Register",
               onTap: () {
+                // send();
                 context.replaceNamed(SignInScreen.routeName);
               }),
           const SizedBox(
